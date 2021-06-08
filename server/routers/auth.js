@@ -89,4 +89,5 @@ router.get("/register", async (req, res) => {
   }
 });
 
+//export module
 module.exports = router;
