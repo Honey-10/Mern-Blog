@@ -1,7 +1,33 @@
-import React from "react";
+import React, { useState } from "react";
 import signinimg from "../images/signin-image.jpg";
+import { NavLink, useHistory } from "react-router-dom";
 
 const Login = () => {
+  const history = useHistory();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const LoginUser = async (e) => {
+    e.preventDefault();
+    const res = await fetch("/signin", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+    });
+    const data = res.json();
+    if (res.status === 400 || !data) {
+      window.alert("Invalid ID");
+    } else {
+      window.alert("Sucessfull Login");
+      history.push("/");
+    }
+  };
+
   return (
     <>
       <section class="sign-in">
@@ -11,29 +37,37 @@ const Login = () => {
               <figure>
                 <img src={signinimg} alt="sing up image" />
               </figure>
-              <a class="signup-image-link" href="#">
+              <NavLink class="signup-image-link" to="/Signup">
                 Create an account
-              </a>
+              </NavLink>
             </div>
             <div class="signin-form">
               <h2 class="form-title">Sign up</h2>
               <form id="login-form" class="register-form" method="POST">
                 <div class="form-group">
-                  <label for="your_name"></label>{" "}
+                  <label for="your_name">
+                    <i class="fas fa-users"></i>
+                  </label>{" "}
                   <input
                     id="your_name"
-                    name="your_name"
+                    name="email"
                     type="text"
                     placeholder="Your Name"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                   />
                 </div>
                 <div class="form-group">
-                  <label for="your_pass"></label>{" "}
+                  <label for="your_pass">
+                    <i class="fas fa-lock"></i>
+                  </label>
                   <input
                     id="your_pass"
-                    name="your_pass"
+                    name="password"
                     type="password"
                     placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
                 <div class="form-group">
@@ -54,6 +88,7 @@ const Login = () => {
                     name="signin"
                     type="submit"
                     value="Log in"
+                    onClick={LoginUser}
                   />
                 </div>
               </form>
